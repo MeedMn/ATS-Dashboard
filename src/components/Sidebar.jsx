@@ -83,6 +83,15 @@ const Sidebar = () => {
           </MenuItem>
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
           ---------------------------------------------
+          <br />
+          <br />
+            <Item
+              title="Dashboard"
+              to="/"
+              icon={<HomeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
           </Box>
         </Menu>
       </ProSidebar>
