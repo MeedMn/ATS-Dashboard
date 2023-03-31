@@ -92,6 +92,31 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <br />
+            <Item
+              title="Bus"
+              to="/bus"
+              icon={<DirectionsBusIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <br/>
+            <Item
+              title="Parking"
+              to="/parking"
+              icon={<LocalParkingIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <br/>
+            <Item
+              title="Clients"
+              to="/clients"
+              icon={<PersonAddAlt1Icon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <br/>
           </Box>
         </Menu>
       </ProSidebar>
