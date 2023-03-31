@@ -57,6 +57,7 @@ const Sidebar = () => {
     >
       <ProSidebar collapsed={isCollapsed}>
         <Menu iconShape="square">
+          {/* LOGO AND MENU ICON */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
@@ -85,10 +86,19 @@ const Sidebar = () => {
           ---------------------------------------------
           <br />
           <br />
+          
             <Item
               title="Dashboard"
               to="/"
               icon={<HomeOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <br />
+            <Item
+              title="Drivers"
+              to="/drivers"
+              icon={<PersonIcon />}
               selected={selected}
               setSelected={setSelected}
             />
@@ -111,7 +121,7 @@ const Sidebar = () => {
             <br/>
             <Item
               title="Clients"
-              to="/clients"
+              to="/client"
               icon={<PersonAddAlt1Icon />}
               selected={selected}
               setSelected={setSelected}
