@@ -97,7 +97,7 @@ const Sidebar = () => {
             <br />
             <Item
               title="Drivers"
-              to="/drivers"
+              to="/driver"
               icon={<PersonIcon />}
               selected={selected}
               setSelected={setSelected}

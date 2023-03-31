@@ -5,6 +5,7 @@ import { ColorModeContext, useMode } from "./theme";
 import Dashboard from "./pages/Dashboard";
 import Sidebar from "./components/Sidebar";
 import './app.css';
+import Driver from "./pages/Driver";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -19,6 +20,8 @@ function App() {
           <main className="content">
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/driver" element={<Driver />} />
+              
             </Routes>
           </main>
         </div>
