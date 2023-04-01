@@ -1,20 +1,22 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useParams} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
-import {getDrivers} from '../data/DriverDB'
+import {getDrivers,DeleteDriver} from '../data/DriverDB'
 
 const Driver = () => {
     const [drivers,setDrivers] = useState([]);
+    const [id,setId] = useState(-1);
+    // GetData
     useEffect(()=>{
         getDriver()
     },[]);
     async function getDriver(){
         setDrivers(await getDrivers())
     }
-    console.log(drivers)
+    
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const columns = [
@@ -68,14 +70,13 @@ const Driver = () => {
               justifyContent="space-between"
               borderRadius="4px"
             >
-              <Button style={{background:"green",color:"white"}}>Edit</Button>
-              <Button style={{background:"red",color:"white"}}>Delete</Button>
+              <Button style={{background:"green",color:"white",marginRight:"20px",padding:"10px 20px"}}>Edit</Button>
+              <Button style={{background:"red",color:"white"}} onClick={()=>DeleteDriver(id)}>Delete</Button>
             </Box>
           );
         },
       },
     ];
-  
     return (
       <Box m="20px">
         <Header title="Drivers" subtitle="Managing the drivers" />
@@ -124,7 +125,12 @@ const Driver = () => {
             },
           }}
         >
-          <DataGrid checkboxSelection rows={drivers} columns={columns} components={{ Toolbar: GridToolbar }}/>
+          <DataGrid disableSelectionOnClick rows={drivers} columns={columns} components={{ Toolbar: GridToolbar }}
+                onCellClick={(e)=>{
+                    setId(e.row["id"])
+                    console.log("Id : ",e.row["id"])
+                }}
+          />
         </Box>
       </Box>
     );

@@ -83,7 +83,7 @@ const Sidebar = () => {
             )}
           </MenuItem>
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-          ---------------------------------------------
+            <hr />
           <br />
           <br />
           

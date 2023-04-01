@@ -40,7 +40,7 @@ const AddDriver = () => {
     
           <Formik onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={checkoutSchema}>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
                 <Box
                   display="grid"
                   gap="30px"
@@ -183,8 +183,8 @@ const AddDriver = () => {
                   />
                 </Box>
                 <Box display="flex" justifyContent="center" mt="20px">
-                  <Button type="submit" color="secondary" variant="contained">
-                    Create New Driver
+                  <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#120a8f"}}>
+                    Add New Driver
                   </Button>
                 </Box>
               </form>
