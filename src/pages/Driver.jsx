@@ -1,9 +1,20 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
+import { useState,useEffect } from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
+import { Link } from "react-router-dom";
+import {getDrivers} from '../data/DriverDB'
 
 const Driver = () => {
+    const [drivers,setDrivers] = useState([]);
+    useEffect(()=>{
+        getDriver()
+    },[]);
+    async function getDriver(){
+        setDrivers(await getDrivers())
+    }
+    console.log(drivers)
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const columns = [
@@ -21,6 +32,12 @@ const Driver = () => {
         cellClassName: "prenom-column--cell",
       },
       {
+        field: "address",
+        headerName: "Address",
+        headerAlign: "left",
+        align: "left",
+      },
+      {
         field: "age",
         headerName: "Age",
         type: "number",
@@ -28,13 +45,13 @@ const Driver = () => {
         align: "left",
       },
       {
-        field: "phone",
+        field: "tele",
         headerName: "Phone Number",
         flex: 1,
       },
       {
-        field: "email",
-        headerName: "Email",
+        field: "permis",
+        headerName: "Permis",
         flex: 1,
       },
       {
@@ -62,6 +79,15 @@ const Driver = () => {
     return (
       <Box m="20px">
         <Header title="Drivers" subtitle="Managing the drivers" />
+        <Box
+        width="100%"
+        display="flex"
+        justifyContent="end"
+      >
+        <Link style={{textDecoration:"none"}} to="/adddriver" >
+            <Button style={{background:"#120a8f",color:"white",fontWeight:"bold",padding:"10px 50px"}}>Add Driver</Button>
+        </Link>
+      </Box>
         <Box
           m="40px 0 0 0"
           height="75vh"
@@ -98,7 +124,7 @@ const Driver = () => {
             },
           }}
         >
-          <DataGrid checkboxSelection rows={[]} columns={columns} components={{ Toolbar: GridToolbar }}/>
+          <DataGrid checkboxSelection rows={drivers} columns={columns} components={{ Toolbar: GridToolbar }}/>
         </Box>
       </Box>
     );
