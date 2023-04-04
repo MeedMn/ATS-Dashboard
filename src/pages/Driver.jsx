@@ -1,5 +1,5 @@
-import { Box, Button, Typography, useTheme } from "@mui/material";
-import { useState,useEffect,useParams} from "react";
+import { Box, Button, useTheme } from "@mui/material";
+import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
@@ -8,7 +8,6 @@ import {getDrivers,DeleteDriver} from '../data/DriverDB'
 
 const Driver = () => {
     const [drivers,setDrivers] = useState([]);
-    const [id,setId] = useState(-1);
     // GetData
     useEffect(()=>{
         getDriver()
@@ -60,7 +59,16 @@ const Driver = () => {
         field: "action",
         headerName: "Action",
         flex: 1,
-        renderCell: ({ row: { access } }) => {
+        renderCell: (params) => {
+            const onClick = (e) => {          
+                const api = params.api;
+                const thisRow = {};
+                api.getAllColumns()
+                  .filter(c => c.field !== "__check__" && !!c)
+                  .forEach(c => {thisRow[c.field] = params.row[c.field]});
+                
+                return thisRow;
+              };
           return (
             <Box
               width="60%"
@@ -70,8 +78,10 @@ const Driver = () => {
               justifyContent="space-between"
               borderRadius="4px"
             >
-              <Button style={{background:"green",color:"white",marginRight:"20px",padding:"10px 20px"}}>Edit</Button>
-              <Button style={{background:"red",color:"white"}} onClick={()=>DeleteDriver(id)}>Delete</Button>
+            <Link style={{textDecoration:"none"}} to={{pathname:`/edit/${onClick()["id"]}`, state: { data: onClick() },}}>
+                  <Button style={{background:"green",color:"white",marginRight:"20px",padding:"10px 20px"}}>Edit</Button>
+              </Link>
+              <Button style={{background:"red",color:"white"}} onClick={()=>DeleteDriver(onClick()["id"])}>Delete</Button>
             </Box>
           );
         },
@@ -125,12 +135,7 @@ const Driver = () => {
             },
           }}
         >
-          <DataGrid disableSelectionOnClick rows={drivers} columns={columns} components={{ Toolbar: GridToolbar }}
-                onCellClick={(e)=>{
-                    setId(e.row["id"])
-                    console.log("Id : ",e.row["id"])
-                }}
-          />
+          <DataGrid disableSelectionOnClick rows={drivers} columns={columns} components={{ Toolbar: GridToolbar }}/>
         </Box>
       </Box>
     );
