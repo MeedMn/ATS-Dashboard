@@ -39,19 +39,20 @@ const Sidebar = () => {
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important`,
+          background: `#146C94 !important`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
         },
         "& .pro-inner-item": {
           padding: "5px 35px 5px 20px !important",
+          color:"#F6F1F1"
         },
         "& .pro-inner-item:hover": {
-          color: "#868dfb !important",
+          color: "#000000 !important",
         },
         "& .pro-menu-item.active": {
-          color: "#6870fa !important",
+          color: "#000000 !important",
         },
       }}
     >
@@ -73,7 +74,7 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.yellow[100]} fontWeight={600} letterSpacing={10}>
+                <Typography variant="h3" color="white" fontWeight={600} letterSpacing={10}>
                   ATS
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>

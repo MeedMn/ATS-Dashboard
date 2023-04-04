@@ -183,7 +183,7 @@ const AddDriver = () => {
                   />
                 </Box>
                 <Box display="flex" justifyContent="center" mt="20px">
-                  <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#120a8f"}}>
+                  <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#146C94"}}>
                     Add New Driver
                   </Button>
                 </Box>

@@ -96,7 +96,7 @@ const Driver = () => {
         justifyContent="end"
       >
         <Link style={{textDecoration:"none"}} to="/adddriver" >
-            <Button style={{background:"#120a8f",color:"white",fontWeight:"bold",padding:"10px 50px"}}>Add Driver</Button>
+            <Button style={{background:"#146C94",color:"white",fontWeight:"bold",padding:"10px 50px"}}>Add Driver</Button>
         </Link>
       </Box>
         <Box
@@ -117,7 +117,7 @@ const Driver = () => {
               color: "black",
             },
             "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: "#120a8f",
+              backgroundColor: "#146C94",
               borderBottom: "none",
               color: "white",
             },
@@ -127,7 +127,7 @@ const Driver = () => {
             },
             "& .MuiDataGrid-footerContainer": {
               borderTop: "none",
-              backgroundColor: "#120a8f",
+              backgroundColor: "#146C94",
               color: "white",
             },
             "& .MuiCheckbox-root": {
