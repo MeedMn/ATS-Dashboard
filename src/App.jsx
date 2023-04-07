@@ -6,8 +6,6 @@ import Dashboard from "./pages/Dashboard";
 import Sidebar from "./components/Sidebar";
 import './app.css';
 import Driver from "./pages/Driver";
-import AddDriver from "./pages/CruidPages/AddDriver";
-import ModifyDriver from "./pages/CruidPages/ModifyDriver";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -23,8 +21,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/driver" element={<Driver />} />
-              <Route path="/adddriver" element={<AddDriver />} />
-              <Route path='/edit/:id' element={<ModifyDriver />}/>
             </Routes>
           </main>
         </div>
