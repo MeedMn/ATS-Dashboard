@@ -10,6 +10,7 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import { BusAlert as BusAlertIcon } from '@mui/icons-material';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -39,7 +40,8 @@ const Sidebar = () => {
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `#146C94 !important`,
+          background: `#003f5c !important`,
+          borderRadius: "0px 50px 50px 0px"
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -74,9 +76,12 @@ const Sidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color="white" fontWeight={600} letterSpacing={10}>
-                  ATS
-                </Typography>
+                <Box display="flex" alignItems="center">
+                  <BusAlertIcon sx={{ fontSize: "32px", color: "#ffa600" }} />
+                  <Typography variant="h3" color="white" fontWeight={600} letterSpacing={10} ml={1} sx={{ fontSize: "32px" }}>
+                    ATS
+                  </Typography>
+                </Box>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
                 </IconButton>

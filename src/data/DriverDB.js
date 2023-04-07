@@ -16,10 +16,9 @@ export async function getDrivers(){
 
 export async function DeleteDriver(id){
     await axios.delete(`http://localhost:8080/deleteDriver/${id}`);
+    window.location.assign("/driver");
 }
 
-export const editDriver = async (id,driver) => {
-    console.log(driver)
-    await axios.put(`http://localhost:8080/updateDriver/${id}`,driver).catch((error) => console.log(error));
+export const editDriver = async (driver1) => {
+    await axios.put(`http://localhost:8080/updateDriver/${driver1['id']}`,driver1).catch((error) => console.log(error));
 }
-
