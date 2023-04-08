@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React,{useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -10,16 +10,14 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import { BusAlert as BusAlertIcon } from '@mui/icons-material';
+import logo from "../images/logo.png";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
   return (
     <MenuItem
       active={selected === title}
       style={{
-        color: colors.yellow[100],
+        color: "black",
       }}
       onClick={() => setSelected(title)}
       icon={icon}
@@ -38,6 +36,13 @@ const Sidebar = () => {
 
   return (
     <Box
+  sx={{
+    display: "flex",
+    justifyContent: "flex-end",
+    boxShadow: "3px 0 10px rgba(0, 0, 0, 0.5)",
+    borderRadius: "0px 50px 50px 0px"
+  }}>
+    <Box
       sx={{
         "& .pro-sidebar-inner": {
           background: `#003f5c !important`,
@@ -51,16 +56,21 @@ const Sidebar = () => {
           color:"#F6F1F1"
         },
         "& .pro-inner-item:hover": {
-          color: "#000000 !important",
+          color: "#00202e !important",
         },
         "& .pro-menu-item.active": {
           color: "#000000 !important",
-        },
+          "& .pro-inner-item": {
+            padding: "5px 35px 5px 20px !important",
+            color:"#00202e"
+          },
+          background: "white",
+          borderRadius: "50px 0px 0px 50px"
+        }
       }}
     >
       <ProSidebar collapsed={isCollapsed}>
         <Menu iconShape="square">
-          {/* LOGO AND MENU ICON */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
@@ -77,8 +87,8 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Box display="flex" alignItems="center">
-                  <BusAlertIcon sx={{ fontSize: "32px", color: "#ffa600" }} />
-                  <Typography variant="h3" color="white" fontWeight={600} letterSpacing={10} ml={1} sx={{ fontSize: "32px" }}>
+                  <img src={logo} alt="bus" width="55" height="55" style={{marginRight: 10+"px"}} />
+                  <Typography variant="h3" color="white" fontWeight={500} letterSpacing={10} ml={1} sx={{ fontSize: "28px" }}>
                     ATS
                   </Typography>
                 </Box>
@@ -136,6 +146,7 @@ const Sidebar = () => {
           </Box>
         </Menu>
       </ProSidebar>
+    </Box>
     </Box>
   );
 };
