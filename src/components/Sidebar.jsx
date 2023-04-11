@@ -10,6 +10,7 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import PeopleIcon from '@mui/icons-material/People';
 import logo from "../images/logo.png";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -115,6 +116,14 @@ const Sidebar = () => {
               title="Drivers"
               to="/driver"
               icon={<PersonIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <br />
+            <Item
+              title="Co-Drivers"
+              to="/coDriver"
+              icon={<PeopleIcon />}
               selected={selected}
               setSelected={setSelected}
             />

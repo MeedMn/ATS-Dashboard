@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import './app.css';
 import Driver from "./pages/Driver";
 import Bus from "./pages/Bus";
+import CoDriver from "./pages/CoDriver";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/driver" element={<Driver />} />
+              <Route path="/coDriver" element={<CoDriver />} />
               <Route path="/bus" element={<Bus />} />
             </Routes>
           </main>

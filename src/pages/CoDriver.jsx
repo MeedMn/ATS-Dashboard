@@ -1,38 +1,46 @@
-import { Box, Button, useTheme,Typography,Modal,TextField, useMediaQuery,Select,MenuItem,FormControl,InputLabel,OutlinedInput} from "@mui/material";
+import { Box, Button, useTheme,Modal,TextField, useMediaQuery} from "@mui/material";
 import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
-import {getBusses,DeleteBus,addBus,editBus} from '../data/BusDB'
+import {getcoDrivers,DeletecoDriver,addcoDriver,editcoDriver} from '../data/CoDriverDB'
 import * as yup from 'yup';
 import { Formik } from "formik";
-
-const Bus = () => {
+import {makeCode} from '../data/SupportingFunctions'
+const CoDriver = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
+    const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
     const handleFormSubmit = (values) => {
-        addBus(values);
-        window.location.assign("/transport");
+        values.age = parseInt(values.age);
+        values.code = makeCode(values.licence)
+        addcoDriver(values);
+        window.location.assign("/coDriver");
     };
     const initialValues = {
-        registration_number: "",
-        fuel: "",
-        seat_number: "",
-        driver: "",
-        codriver: "",
-    };
-    const [transport,setBus] = useState({
-        registration_number: "",
-        fuel: "",
-        seat_number: "",
-        driver: "",
-        codriver: "",
+      firstname: "",
+      lastname: "",
+      address: "",
+      numberphone: "",
+      age: "",
+      licence: "",
+      code:""
+  };
+    const [coDriver,setcoDriver] = useState({
+      firstname: "",
+      lastname: "",
+      address: "",
+      numberphone: "",
+      age: "",
+      licence: "",
+      code:""
   });
     const checkoutSchema = yup.object().shape({
-        registration_number:yup.string().required("Required"),
-        fuel:yup.string().required("Required"),
-        seat_number:yup.number().required("Required"),
-        driver:yup.string().required("Required"),
-        codriver:yup.string().required("Required"),
+        firstname:yup.string().required("Required"),
+        lastname:yup.string().required("Required"),
+        address:yup.string().required("Required"),
+        numberphone:yup.string().matches(phoneRegExp, "phone number is not valid!").required("Required"),
+        age:yup.number().required(),
+        licence:yup.string().required("Required"),
     })
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -52,7 +60,7 @@ const Bus = () => {
     setOpenEdit(false);
   };
   const EditModal = (data)=>{
-    setBus(data);
+    setcoDriver(data);
   }
   const body = (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -61,7 +69,7 @@ const Bus = () => {
   <Box sx={{ position: 'absolute', top: '10px', right: '15px' }}>
   <button onClick={handleClose} style={{ backgroundColor: 'transparent', border: 'none', color: '#000', fontSize: '24px', cursor: 'pointer' }}>X</button>
   </Box>
-  <Header title="ADD BUS" subtitle="Add a new Bus !"/>
+  <Header title="ADD CO-DRIVER" subtitle="Add a new co-driver !"/>
   </Box>
           <Formik onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={checkoutSchema}>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
@@ -78,67 +86,13 @@ const Bus = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Registration"
+                    label="First Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.registration_number}
-                    name="registration_number"
-                    error={!!touched.registration_number && !!errors.registration_number}
-                    helperText={touched.registration_number && errors.registration_number}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                      <FormControl fullWidth sx={{ gridColumn: "span 2",  "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: "black"},
-                                    "&:hover fieldset": { borderColor: "green" },
-                                  }}}>
-                         <InputLabel id="demo-simple-select-label" sx={{ color: "black" }}>
-                             Fuel
-                          </InputLabel>
-                        <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={values.MenuItem}
-                                label="Fuel"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                variant="outlined"
-                                error={touched.fuel && !!errors.fuel}
-                                helperText={touched.fuel && errors.fuel}
-                                sx={{ 
-                                    gridColumn: "span 2",
-                                    "& label": { color: "black" },
-                                    "& .MuiInputBase-input": {
-                                        color: "black"
-                                      },
-                                    "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: "black"},
-                                    "&:hover fieldset": { borderColor: "green" },
-                                  },}}
-                            >
-                            <MenuItem value={10}>Diesel</MenuItem>
-                            <MenuItem value={20}>Essence</MenuItem>
-                        </Select>
-                    </FormControl>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Number of Passengers"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.seat_number}
-                    name="seat_number"
-                    error={!!touched.seat_number && !!errors.seat_number}
-                    helperText={touched.seat_number && errors.seat_number}
+                    value={values.firstname}
+                    name="firstname"
+                    error={!!touched.firstname && !!errors.firstname}
+                    helperText={touched.firstname && errors.firstname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -154,13 +108,13 @@ const Bus = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Driver"
+                    label="Last Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.driver}
-                    name="driver"
-                    error={!!touched.driver && !!errors.driver}
-                    helperText={touched.driver && errors.driver}
+                    value={values.lastname}
+                    name="lastname"
+                    error={!!touched.lastname && !!errors.lastname}
+                    helperText={touched.lastname && errors.lastname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -176,15 +130,80 @@ const Bus = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Co-Driver"
+                    label="Address"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.codriver}
-                    name="codriver"
-                    error={!!touched.codriver && !!errors.codriver}
-                    helperText={touched.codriver && errors.codriver}
+                    value={values.address}
+                    name="address"
+                    error={!!touched.address && !!errors.address}
+                    helperText={touched.address && errors.address}
                     sx={{ 
-                        left :210,
+                        gridColumn: "span 2",
+                        "& label": { color: "black" },
+                        "& .MuiInputBase-input": {
+                            color: "black"
+                          },
+                        "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "black"},
+                        "&:hover fieldset": { borderColor: "green" },
+                      },}}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    label="Phone Number"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.numberphone}
+                    name="numberphone"
+                    error={!!touched.numberphone && !!errors.numberphone}
+                    helperText={touched.numberphone && errors.numberphone}
+                    sx={{ 
+                        gridColumn: "span 2",
+                        "& label": { color: "black" },
+                        "& .MuiInputBase-input": {
+                            color: "black"
+                          },
+                        "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "black"},
+                        "&:hover fieldset": { borderColor: "green" },
+                      },}}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    label="Age"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.age}
+                    name="age"
+                    error={!!touched.age && !!errors.age}
+                    helperText={touched.age && errors.age}
+                    sx={{ 
+                        gridColumn: "span 2",
+                        "& label": { color: "black" },
+                        "& .MuiInputBase-input": {
+                            color: "black"
+                          },
+                        "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "black"},
+                        "&:hover fieldset": { borderColor: "green" },
+                      },}}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    label="coDriver License"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.licence}
+                    name="licence"
+                    error={!!touched.licence && !!errors.licence}
+                    helperText={touched.licence && errors.licence}
+                    sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
                         "& .MuiInputBase-input": {
@@ -198,7 +217,7 @@ const Bus = () => {
                 </Box>
                 <Box display="flex" justifyContent="center" mt="20px">
                   <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#146C94"}}>
-                    Add New Bus
+                    Add New coDriver
                   </Button>
                 </Box>
               </form>
@@ -214,13 +233,13 @@ const Bus = () => {
     <Box sx={{ position: 'absolute', top: '10px', right: '15px' }}>
     <button onClick={handleCloseEdit} style={{ backgroundColor: 'transparent', border: 'none', color: '#000', fontSize: '24px', cursor: 'pointer' }}>X</button>
     </Box>
-        <Header title="EDIT BUS" subtitle="Update the Bus you selected !"/>
+        <Header title="EDIT CO-DRIVER" subtitle="Update the co-driver you selected !"/>
     </Box>
           <Formik onSubmit={(values, actions) => {
-            editBus(values);
+            editcoDriver(values);
            actions.setSubmitting(false);
-           window.location.assign("/bus");
-           }} initialValues={transport} validationSchema={checkoutSchema}>
+           window.location.assign("/coDriver");
+           }} initialValues={coDriver} validationSchema={checkoutSchema}>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
               <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
                 <Box
@@ -231,71 +250,17 @@ const Bus = () => {
                     "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
                   }}
                 >
-                                   <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Registration"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.registration_number}
-                    name="registration_number"
-                    error={!!touched.registration_number && !!errors.registration_number}
-                    helperText={touched.registration_number && errors.registration_number}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                      <FormControl fullWidth sx={{ gridColumn: "span 2",  "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: "black"},
-                                    "&:hover fieldset": { borderColor: "green" },
-                                  }}}>
-                         <InputLabel id="demo-simple-select-label" sx={{ color: "black" }}>
-                             Fuel
-                          </InputLabel>
-                        <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={values.MenuItem}
-                                label="Fuel"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                variant="outlined"
-                                error={touched.fuel && !!errors.fuel}
-                                helperText={touched.fuel && errors.fuel}
-                                sx={{ 
-                                    gridColumn: "span 2",
-                                    "& label": { color: "black" },
-                                    "& .MuiInputBase-input": {
-                                        color: "black"
-                                      },
-                                    "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: "black"},
-                                    "&:hover fieldset": { borderColor: "green" },
-                                  },}}
-                            >
-                            <MenuItem value={10}>Diesel</MenuItem>
-                            <MenuItem value={20}>Essence</MenuItem>
-                        </Select>
-                    </FormControl>
                   <TextField
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Number of Passengers"
+                    label="First Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.seat_number}
-                    name="seat_number"
-                    error={!!touched.seat_number && !!errors.seat_number}
-                    helperText={touched.seat_number && errors.seat_number}
+                    value={values.firstname}
+                    name="firstname"
+                    error={!!touched.firstname && !!errors.firstname}
+                    helperText={touched.firstname && errors.firstname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -311,13 +276,13 @@ const Bus = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Driver"
+                    label="Last Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.driver}
-                    name="driver"
-                    error={!!touched.driver && !!errors.driver}
-                    helperText={touched.driver && errors.driver}
+                    value={values.lastname}
+                    name="lastname"
+                    error={!!touched.lastname && !!errors.lastname}
+                    helperText={touched.lastname && errors.lastname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -333,15 +298,80 @@ const Bus = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Co-Driver"
+                    label="Address"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.codriver}
-                    name="codriver"
-                    error={!!touched.codriver && !!errors.codriver}
-                    helperText={touched.codriver && errors.codriver}
+                    value={values.address}
+                    name="address"
+                    error={!!touched.address && !!errors.address}
+                    helperText={touched.address && errors.address}
                     sx={{ 
-                        left :210,
+                        gridColumn: "span 2",
+                        "& label": { color: "black" },
+                        "& .MuiInputBase-input": {
+                            color: "black"
+                          },
+                        "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "black"},
+                        "&:hover fieldset": { borderColor: "green" },
+                      },}}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    label="Phone Number"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.numberphone}
+                    name="numberphone"
+                    error={!!touched.numberphone && !!errors.numberphone}
+                    helperText={touched.numberphone && errors.numberphone}
+                    sx={{ 
+                        gridColumn: "span 2",
+                        "& label": { color: "black" },
+                        "& .MuiInputBase-input": {
+                            color: "black"
+                          },
+                        "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "black"},
+                        "&:hover fieldset": { borderColor: "green" },
+                      },}}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    label="Age"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.age}
+                    name="age"
+                    error={!!touched.age && !!errors.age}
+                    helperText={touched.age && errors.age}
+                    sx={{ 
+                        gridColumn: "span 2",
+                        "& label": { color: "black" },
+                        "& .MuiInputBase-input": {
+                            color: "black"
+                          },
+                        "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "black"},
+                        "&:hover fieldset": { borderColor: "green" },
+                      },}}
+                  />
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    type="text"
+                    label="coDriver License"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.licence}
+                    name="licence"
+                    error={!!touched.licence && !!errors.licence}
+                    helperText={touched.licence && errors.licence}
+                    sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
                         "& .MuiInputBase-input": {
@@ -355,7 +385,7 @@ const Bus = () => {
                 </Box>
                 <Box display="flex" justifyContent="center" mt="20px">
                   <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#146C94"}}>
-                    Edit Driver
+                    Edit coDriver
                   </Button>
                 </Box>
               </form>
@@ -364,48 +394,55 @@ const Bus = () => {
         </Box>
         </Box>
   );
-    const [busses,setBusses] = useState([]);
+    const [coDrivers,setcoDrivers] = useState([]);
     // GetData
     useEffect(()=>{
-        getBusses()
+        getcoDriver()
     },[]);
-    async function getBusses(){
-        setBus(await getBusses())
+    async function getcoDriver(){
+        setcoDrivers(await getcoDrivers())
     }
     
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const columns = [
       { field: "id", headerName: "ID"},
+      {field:"code", headerName:"Co-Driver Reference",flex:1},
       {
-        field: "registration_number",
-        headerName: "Registration",
-        flex: 1.2,
+        field: "lastname",
+        headerName: "Last Name",
+        flex: 1,
         cellClassName: "name-column--cell",
       },
       {
-        field: "fuel",
-        headerName: "Fuel",
+        field: "firstname",
+        headerName: "First Name",
         flex: 1,
-        cellClassName: "prenom-column--cell",
+        cellClassName: "firstname-column--cell",
       },
+      
       {
-        field: "seat_number",
-        headerName: "Number of Passangers",
-        type: "number",
-        flex: 1,
+        field: "address",
+        headerName: "Address",
         headerAlign: "left",
         align: "left",
       },
       {
-        field: "driver",
-        headerName: "Driver",
-        flex: 1.2,
+        field: "age",
+        headerName: "Age",
+        type: "number",
+        headerAlign: "left",
+        align: "left",
       },
       {
-        field: "codriver",
-        headerName: "Co-Driver",
-        flex: 1.2,
+        field: "numberphone",
+        headerName: "Phone Number",
+        flex: 1,
+      },
+      {
+        field: "licence",
+        headerName: "Co-Driver License",
+        flex: 1,
       },
       {
         field: "action",
@@ -438,7 +475,7 @@ const Bus = () => {
             >
               {bodyedit}
             </Modal>
-              <Button style={{background:"red",color:"white"}} onClick={()=>DeleteBus(onClick()["id"])}>Delete</Button>
+              <Button style={{background:"red",color:"white"}} onClick={()=>DeletecoDriver(onClick()["id"])}>Delete</Button>
             </Box>
           );
         },
@@ -446,14 +483,14 @@ const Bus = () => {
     ];
     return (
       <Box m="20px">
-        <Header title="Bus" subtitle="Managing the Buses" />
+        <Header title="CO-DRIVERS" subtitle="Managing the co-drivers" />
         
         <Box
         width="100%"
         display="flex"
         justifyContent="end"
       >
-      <Button onClick={handleOpen} style={{background:"#003f5c",color:"white",fontWeight:"bold",padding:"10px 50px"}}>Add Bus</Button>
+      <Button onClick={handleOpen} style={{background:"#003f5c",color:"white",fontWeight:"bold",padding:"10px 50px"}}>Add coDriver</Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -499,10 +536,11 @@ const Bus = () => {
             },
           }}
         >
-          <DataGrid disableSelectionOnClick rows={busses} columns={columns} components={{ Toolbar: GridToolbar }}/>
+          <DataGrid disableSelectionOnClick rows={coDrivers} columns={columns} components={{ Toolbar: GridToolbar }}/>
         </Box>
       </Box>
     );
   };
   
-  export default Bus;
+  export default CoDriver;
+  

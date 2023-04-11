@@ -1,46 +1,46 @@
-import { Box, Button, useTheme,Typography,Modal,TextField, useMediaQuery} from "@mui/material";
+import { Box, Button, useTheme,Modal,TextField, useMediaQuery} from "@mui/material";
 import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
-import { Link } from "react-router-dom";
-import {getDrivers,DeleteDriver} from '../data/DriverDB'
+import {getDrivers,DeleteDriver,addDriver,editDriver} from '../data/DriverDB'
 import * as yup from 'yup';
-import {addDriver,editDriver} from '../data/DriverDB'
 import { Formik } from "formik";
-import axios from 'axios';
-
+import {makeCode} from '../data/SupportingFunctions'
 const Driver = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
     const phoneRegExp = /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
     const handleFormSubmit = (values) => {
         values.age = parseInt(values.age);
+        values.code = makeCode(values.licence)
         addDriver(values);
         window.location.assign("/driver");
     };
     const initialValues = {
-        prenom: "",
-        nom: "",
-        address: "",
-        tele: "",
-        age: "",
-        permis: "",
-    };
-    const [driver,setDriver] = useState({
-      nom: "",
-      prenom: "",
+      firstname: "",
+      lastname: "",
       address: "",
-      tele: "",
+      numberphone: "",
       age: "",
-      permis: "",
+      licence: "",
+      code:""
+  };
+    const [driver,setDriver] = useState({
+      firstname: "",
+      lastname: "",
+      address: "",
+      numberphone: "",
+      age: "",
+      licence: "",
+      code:""
   });
     const checkoutSchema = yup.object().shape({
-        prenom:yup.string().required("Required"),
-        nom:yup.string().required("Required"),
+        firstname:yup.string().required("Required"),
+        lastname:yup.string().required("Required"),
         address:yup.string().required("Required"),
-        tele:yup.string().matches(phoneRegExp, "phone number is not valid!").required("Required"),
+        numberphone:yup.string().matches(phoneRegExp, "phone number is not valid!").required("Required"),
         age:yup.number().required(),
-        permis:yup.string().required("Required"),
+        licence:yup.string().required("Required"),
     })
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -86,13 +86,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Prenom"
+                    label="First Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.prenom}
-                    name="prenom"
-                    error={!!touched.prenom && !!errors.prenom}
-                    helperText={touched.prenom && errors.prenom}
+                    value={values.firstname}
+                    name="firstname"
+                    error={!!touched.firstname && !!errors.firstname}
+                    helperText={touched.firstname && errors.firstname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -108,13 +108,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Nom"
+                    label="Last Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.nom}
-                    name="nom"
-                    error={!!touched.nom && !!errors.nom}
-                    helperText={touched.nom && errors.nom}
+                    value={values.lastname}
+                    name="lastname"
+                    error={!!touched.lastname && !!errors.lastname}
+                    helperText={touched.lastname && errors.lastname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -152,13 +152,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Numero Telephone"
+                    label="Phone Number"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.tele}
-                    name="tele"
-                    error={!!touched.tele && !!errors.tele}
-                    helperText={touched.tele && errors.tele}
+                    value={values.numberphone}
+                    name="numberphone"
+                    error={!!touched.numberphone && !!errors.numberphone}
+                    helperText={touched.numberphone && errors.numberphone}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -196,13 +196,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Permis"
+                    label="Driver License"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.permis}
-                    name="permis"
-                    error={!!touched.permis && !!errors.permis}
-                    helperText={touched.permis && errors.permis}
+                    value={values.licence}
+                    name="licence"
+                    error={!!touched.licence && !!errors.licence}
+                    helperText={touched.licence && errors.licence}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -254,13 +254,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Prenom"
+                    label="First Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.prenom}
-                    name="prenom"
-                    error={!!touched.prenom && !!errors.prenom}
-                    helperText={touched.prenom && errors.prenom}
+                    value={values.firstname}
+                    name="firstname"
+                    error={!!touched.firstname && !!errors.firstname}
+                    helperText={touched.firstname && errors.firstname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -276,13 +276,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Nom"
+                    label="Last Name"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.nom}
-                    name="nom"
-                    error={!!touched.nom && !!errors.nom}
-                    helperText={touched.nom && errors.nom}
+                    value={values.lastname}
+                    name="lastname"
+                    error={!!touched.lastname && !!errors.lastname}
+                    helperText={touched.lastname && errors.lastname}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -320,13 +320,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Numero Telephone"
+                    label="Phone Number"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.tele}
-                    name="tele"
-                    error={!!touched.tele && !!errors.tele}
-                    helperText={touched.tele && errors.tele}
+                    value={values.numberphone}
+                    name="numberphone"
+                    error={!!touched.numberphone && !!errors.numberphone}
+                    helperText={touched.numberphone && errors.numberphone}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -364,13 +364,13 @@ const Driver = () => {
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="Permis"
+                    label="Driver License"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.permis}
-                    name="permis"
-                    error={!!touched.permis && !!errors.permis}
-                    helperText={touched.permis && errors.permis}
+                    value={values.licence}
+                    name="licence"
+                    error={!!touched.licence && !!errors.licence}
+                    helperText={touched.licence && errors.licence}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -407,18 +407,20 @@ const Driver = () => {
     const colors = tokens(theme.palette.mode);
     const columns = [
       { field: "id", headerName: "ID"},
+      {field:"code", headerName:"Driver Reference",flex:1},
       {
-        field: "nom",
-        headerName: "Nom",
+        field: "lastname",
+        headerName: "Last Name",
         flex: 1,
         cellClassName: "name-column--cell",
       },
       {
-        field: "prenom",
-        headerName: "Prenom",
+        field: "firstname",
+        headerName: "First Name",
         flex: 1,
-        cellClassName: "prenom-column--cell",
+        cellClassName: "firstname-column--cell",
       },
+      
       {
         field: "address",
         headerName: "Address",
@@ -433,13 +435,13 @@ const Driver = () => {
         align: "left",
       },
       {
-        field: "tele",
+        field: "numberphone",
         headerName: "Phone Number",
         flex: 1,
       },
       {
-        field: "permis",
-        headerName: "Permis",
+        field: "licence",
+        headerName: "Driver License",
         flex: 1,
       },
       {
