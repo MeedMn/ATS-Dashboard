@@ -5,5 +5,5 @@ export function makeCode(licence) {
       result += licence.charAt(Math.floor(Math.random() * licence.length));
       counter += 1;
     }
-    return "ATS-"+result;
+    return "ATS"+result;
 }

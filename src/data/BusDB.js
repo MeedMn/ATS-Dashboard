@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export function addBus(Bus){
-    fetch("http://localhost:8080/createTransport",{
+export function addBus(Bus,driver,codriver){
+    fetch(`http://localhost:8080/createTransport/${driver}/${codriver}`,{
             method:'POST',
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify(Bus)

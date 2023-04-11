@@ -9,9 +9,9 @@ import { Formik } from "formik";
 
 const Bus = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
-    const handleFormSubmit = (values) => {
-        addBus(values);
-        window.location.assign("/transport");
+    const handleFormSubmitBus = (values) => {
+        addBus(values,values.driver,values.codriver);
+        window.location.assign("/bus");
     };
     const initialValues = {
         registration_number: "",
@@ -20,7 +20,7 @@ const Bus = () => {
         driver: "",
         codriver: "",
     };
-    const [transport,setBus] = useState({
+    const [bus,setBus] = useState({
         registration_number: "",
         fuel: "",
         seat_number: "",
@@ -63,7 +63,7 @@ const Bus = () => {
   </Box>
   <Header title="ADD BUS" subtitle="Add a new Bus !"/>
   </Box>
-          <Formik onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={checkoutSchema}>
+          <Formik onSubmit={handleFormSubmitBus} initialValues={initialValues} validationSchema={checkoutSchema}>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
               <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
                 <Box
@@ -110,6 +110,7 @@ const Bus = () => {
                                 label="Fuel"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
+                                name="fuel"
                                 variant="outlined"
                                 error={touched.fuel && !!errors.fuel}
                                 helperText={touched.fuel && errors.fuel}
@@ -220,7 +221,7 @@ const Bus = () => {
             editBus(values);
            actions.setSubmitting(false);
            window.location.assign("/bus");
-           }} initialValues={transport} validationSchema={checkoutSchema}>
+           }} initialValues={bus} validationSchema={checkoutSchema}>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
               <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
                 <Box
