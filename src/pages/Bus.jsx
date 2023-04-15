@@ -10,8 +10,9 @@ import { Formik } from "formik";
 const Bus = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
     const handleFormSubmitBus = (values) => {
+        values.seat_number = parseInt(values.seat_number)
         addBus(values,values.driver,values.codriver);
-        window.location.assign("/bus");
+        // window.location.assign("/bus");
     };
     const initialValues = {
         registration_number: "",
@@ -125,8 +126,8 @@ const Bus = () => {
                                     "&:hover fieldset": { borderColor: "green" },
                                   },}}
                             >
-                            <MenuItem value={10}>Diesel</MenuItem>
-                            <MenuItem value={20}>Essence</MenuItem>
+                            <MenuItem value="Diesel">Diesel</MenuItem>
+                            <MenuItem value="Essence">Essence</MenuItem>
                         </Select>
                     </FormControl>
                   <TextField
@@ -371,7 +372,6 @@ const Bus = () => {
         getBusses()
     },[]);
     async function getBusses(){
-        setBus(await getBusses())
     }
     
     const theme = useTheme();
