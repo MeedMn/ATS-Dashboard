@@ -7,7 +7,6 @@ import { tokens } from "../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonIcon from '@mui/icons-material/Person';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import PeopleIcon from '@mui/icons-material/People';

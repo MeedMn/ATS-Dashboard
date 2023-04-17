@@ -3,7 +3,7 @@ import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
-import {getParents,DeleteParent,addParent,editParent,getLongitudeLatitude,getParentById} from '../data/ParentDB'
+import {getParents,DeleteParent,addParent,getLongitudeLatitude,getParentById} from '../data/ParentDB'
 import {addStudent} from "../data/StudentDB"
 import * as yup from 'yup';
 import { Formik } from "formik";

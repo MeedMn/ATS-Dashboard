@@ -1,4 +1,3 @@
-import { Alarm } from '@mui/icons-material';
 import axios from 'axios';
 
 export async function addStudent(student,idP){
