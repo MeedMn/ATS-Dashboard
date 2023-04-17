@@ -396,9 +396,9 @@ const CoDriver = () => {
   );
     const [coDrivers,setcoDrivers] = useState([]);
     // GetData
-    useEffect(()=>{
-        getcoDriver()
-    },[]);
+    window.onload = function () { 
+      getcoDriver()
+  }
     async function getcoDriver(){
         setcoDrivers(await getcoDrivers())
     }
