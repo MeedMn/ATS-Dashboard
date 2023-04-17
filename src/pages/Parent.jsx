@@ -80,6 +80,7 @@ const Parent = () => {
 
   const handleCloseShow = () => {
     setOpenShow(false);
+    setStudents([])
   };
   const ChildModal = (data)=>{
     setIdP(data['id']);
