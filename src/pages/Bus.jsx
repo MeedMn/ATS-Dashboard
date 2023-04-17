@@ -368,9 +368,9 @@ const Bus = () => {
   );
     const [busses,setBusses] = useState([]);
     // GetData
-    window.onload = function () { 
-      getBusses()
-    }
+    useEffect(()=>{
+        getBusses()
+    },[]);
     async function getBusses(){
     }
     

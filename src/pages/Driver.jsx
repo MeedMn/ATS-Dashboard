@@ -396,9 +396,9 @@ const Driver = () => {
   );
     const [drivers,setDrivers] = useState([]);
     // GetData
-    window.onload = function () { 
-      getDriver()
-  }
+    useEffect(()=>{
+        getDriver()
+    },[]);
     async function getDriver(){
         setDrivers(await getDrivers())
     }

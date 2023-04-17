@@ -1,5 +1,5 @@
 import { Box, Button, useTheme,Modal,TextField, useMediaQuery} from "@mui/material";
-import { useState} from "react";
+import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
@@ -311,9 +311,9 @@ const Parent = () => {
   );
     const [parents,setparents] = useState([]);
     // GetData
-    window.onload = function () { 
+    useEffect(()=>{
         getParent()
-    }
+    },[]);
     async function getParent(){
         setparents(await getParents())
     }
