@@ -1,11 +1,13 @@
+import { Alarm } from '@mui/icons-material';
 import axios from 'axios';
 
-export function addStudent(student){
-    fetch("http://localhost:8080/createStudent",{
-            method:'POST',
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify(student)
-        });
+export async function addStudent(student,idP){
+    try{
+        const datafetched = await axios.post("http://localhost:8080/createStudent",student);
+        affectChildToParent(datafetched.data['id'],idP)
+    }catch(error){
+        console.error(error)
+    }
 }
 
 export async function affectChildToParent(idStudent,idParent){

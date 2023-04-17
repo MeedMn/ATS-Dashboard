@@ -4,6 +4,7 @@ import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
 import {getParents,DeleteParent,addParent,editParent,getLongitudeLatitude} from '../data/ParentDB'
+import {addStudent} from "../data/StudentDB"
 import * as yup from 'yup';
 import { Formik } from "formik";
 
@@ -23,6 +24,11 @@ const Parent = () => {
         }, 2000);
         
     };
+    const handleFormSubmitChild = (student) => {
+        student.age = parseInt(student.age)
+        addStudent(student,idP);
+        //window.location.assign("/parent");
+    };
     const initialValues = {
       firstname: "",
       lastname: "",
@@ -30,24 +36,30 @@ const Parent = () => {
       numberphone: "",
       longitude:"",
       latitude:""
-  };
-    const [parent,setparent] = useState({
-        firstname: "",
-        lastname: "",
-        address: "",
-        numberphone: "",
-        longitude:"",
-        latitude:""
-  });
+    };
+    const initialValuesStudent = {
+      firstname: "",
+      lastname: "",
+      grade:"",
+      age:""
+    }
     const checkoutSchema = yup.object().shape({
         firstname:yup.string().required("Required"),
         lastname:yup.string().required("Required"),
+        age:yup.number().required(),
+        grade:yup.string().required("Required"),
         address:yup.string().required("Required"),
         numberphone:yup.string().matches(phoneRegExp, "phone number is not valid!").required("Required"),
     })
+    const checkoutSchemaChild = yup.object().shape({
+        firstname:yup.string().required("Required"),
+        lastname:yup.string().required("Required"),
+        age:yup.number().required(),
+        grade:yup.string().required("Required")
+    })
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-
+  const [idP,setIdP] = useState(0)
   const handleOpen = () => {
     setOpen(true);
   };
@@ -55,15 +67,15 @@ const Parent = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleOpenEdit = () => {
+  const handleOpenChild = () => {
     setOpenEdit(true);
   };
 
-  const handleCloseEdit = () => {
+  const handleCloseChild = () => {
     setOpenEdit(false);
   };
-  const EditModal = (data)=>{
-    setparent(data);
+  const ChildModal = (data)=>{
+    setIdP(data['id']);
   }
   const body = (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -185,41 +197,81 @@ const Parent = () => {
         </Box>
   </Box>
   );
-  const bodyedit = (
+  const bodychild = (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
     <Box sx={{ backgroundColor: '#f5f5f5', padding: '20px',  textAlign: 'center',width: "45%",height: "49%", position: 'relative' }}>
     <Box sx={{ textAlign: 'center', marginBottom: '-170px' }}>
     <Box sx={{ position: 'absolute', top: '10px', right: '15px' }}>
-    <button onClick={handleCloseEdit} style={{ backgroundColor: 'transparent', border: 'none', color: '#000', fontSize: '24px', cursor: 'pointer' }}>X</button>
+    <button onClick={handleCloseChild} style={{ backgroundColor: 'transparent', border: 'none', color: '#000', fontSize: '24px', cursor: 'pointer' }}>X</button>
     </Box>
-        <Header title="EDIT PARENT" subtitle="Update the parent you selected !"/>
+    <Header title="ADD STUDENT" subtitle="Add a new student !"/>
     </Box>
-          <Formik onSubmit={(values, actions) => {
-            editParent(values);
-           actions.setSubmitting(false);
-           window.location.assign("/parent");
-           }} initialValues={parent} validationSchema={checkoutSchema}>
-            {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
-              <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-                  }}
-                >
-                  <TextField
+            <Formik onSubmit={handleFormSubmitChild} initialValues={initialValuesStudent} validationSchema={checkoutSchemaChild}>
+              {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
+                <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
+                  <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    sx={{
+                      "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                    }}
+                  >
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="text"
+                      label="First Name"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.firstname}
+                      name="firstname"
+                      error={!!touched.firstname && !!errors.firstname}
+                      helperText={touched.firstname && errors.firstname}
+                      sx={{ 
+                          gridColumn: "span 2",
+                          "& label": { color: "black" },
+                          "& .MuiInputBase-input": {
+                              color: "black"
+                            },
+                          "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "black"},
+                          "&:hover fieldset": { borderColor: "green" },
+                        },}}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="text"
+                      label="Last Name"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.lastname}
+                      name="lastname"
+                      error={!!touched.lastname && !!errors.lastname}
+                      helperText={touched.lastname && errors.lastname}
+                      sx={{ 
+                          gridColumn: "span 2",
+                          "& label": { color: "black" },
+                          "& .MuiInputBase-input": {
+                              color: "black"
+                            },
+                          "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "black"},
+                          "&:hover fieldset": { borderColor: "green" },
+                        },}}
+                    />
+                    <TextField
                     fullWidth
                     variant="outlined"
                     type="text"
-                    label="First Name"
+                    label="Age"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.firstname}
-                    name="firstname"
-                    error={!!touched.firstname && !!errors.firstname}
-                    helperText={touched.firstname && errors.firstname}
+                    value={values.age}
+                    name="age"
+                    error={!!touched.age && !!errors.age}
+                    helperText={touched.age && errors.age}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -231,84 +283,40 @@ const Parent = () => {
                         "&:hover fieldset": { borderColor: "green" },
                       },}}
                   />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Last Name"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.lastname}
-                    name="lastname"
-                    error={!!touched.lastname && !!errors.lastname}
-                    helperText={touched.lastname && errors.lastname}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Address"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.address}
-                    name="address"
-                    error={!!touched.address && !!errors.address}
-                    helperText={touched.address && errors.address}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Phone Number"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.numberphone}
-                    name="numberphone"
-                    error={!!touched.numberphone && !!errors.numberphone}
-                    helperText={touched.numberphone && errors.numberphone}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                </Box>
-                <Box display="flex" justifyContent="center" mt="20px">
-                  <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#146C94"}}>
-                    Edit parent
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Box>
-        </Box>
-  );
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="text"
+                      label="Grade"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.grade}
+                      name="grade"
+                      error={!!touched.grade && !!errors.grade}
+                      helperText={touched.grade && errors.grade}
+                      sx={{ 
+                          gridColumn: "span 2",
+                          "& label": { color: "black" },
+                          "& .MuiInputBase-input": {
+                              color: "black"
+                            },
+                          "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "black"},
+                          "&:hover fieldset": { borderColor: "green" },
+                        },}}
+                    />
+                  </Box>
+                  <Box display="flex" justifyContent="center" mt="20px">
+                    <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#146C94"}}>
+                      Add New student
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Box>
+    </Box>
+    );
     const [parents,setparents] = useState([]);
     // GetData
     useEffect(()=>{
@@ -357,7 +365,6 @@ const Parent = () => {
                 api.getAllColumns()
                   .filter(c => c.field !== "__check__" && !!c)
                   .forEach(c => {thisRow[c.field] = params.row[c.field]});
-                  alert(JSON.stringify(thisRow))
                 return thisRow;
               };
           return (
@@ -369,14 +376,14 @@ const Parent = () => {
               justifyContent="space-between"
               borderRadius="4px"
             >
-              <Button style={{background:"green",color:"white",marginRight:"20px",padding:"10px 20px"}} onClick={()=>{EditModal(onClick());handleOpenEdit()}}>Edit</Button>
+              <Button style={{background:"#202020",color:"white",marginRight:"20px",padding:"10px 20px"}} onClick={()=>{ChildModal(onClick());handleOpenChild()}}>Add Child</Button>
               <Modal
               open={openEdit}
-              onClose={handleCloseEdit}
+              onClose={handleCloseChild}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              {bodyedit}
+              {bodychild}
             </Modal>
               <Button style={{background:"red",color:"white"}} onClick={()=>DeleteParent(onClick()["id"])}>Delete</Button>
             </Box>
