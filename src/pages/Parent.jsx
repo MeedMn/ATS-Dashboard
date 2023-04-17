@@ -3,7 +3,7 @@ import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
-import {getParents,DeleteParent,addParent,editParent,getLongitudeLatitude} from '../data/ParentDB'
+import {getParents,DeleteParent,addParent,editParent,getLongitudeLatitude,getParentById} from '../data/ParentDB'
 import {addStudent} from "../data/StudentDB"
 import * as yup from 'yup';
 import { Formik } from "formik";
@@ -46,8 +46,6 @@ const Parent = () => {
     const checkoutSchema = yup.object().shape({
         firstname:yup.string().required("Required"),
         lastname:yup.string().required("Required"),
-        age:yup.number().required(),
-        grade:yup.string().required("Required"),
         address:yup.string().required("Required"),
         numberphone:yup.string().matches(phoneRegExp, "phone number is not valid!").required("Required"),
     })
@@ -59,6 +57,8 @@ const Parent = () => {
     })
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openShow, setOpenShow] = useState(false);
+  
   const [idP,setIdP] = useState(0)
   const handleOpen = () => {
     setOpen(true);
@@ -74,8 +74,22 @@ const Parent = () => {
   const handleCloseChild = () => {
     setOpenEdit(false);
   };
+  const handleOpenShow = () => {
+    setOpenShow(true);
+  };
+
+  const handleCloseShow = () => {
+    setOpenShow(false);
+  };
   const ChildModal = (data)=>{
     setIdP(data['id']);
+  }
+  const [students,setStudents] = useState([]);
+  const getStudents = (idP1)=>{
+    const promise = getParentById(idP1)
+    promise.then((data)=>{
+        setStudents(data['student'])
+    })
   }
   const body = (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -385,12 +399,101 @@ const Parent = () => {
             >
               {bodychild}
             </Modal>
+            <Button style={{background:"green",color:"white",marginRight:"20px",padding:"10px 20px"}} onClick={()=>{getStudents(onClick()['id']);handleOpenShow()}}>Show</Button>
+            <Modal
+              open={openShow}
+              onClose={handleCloseShow}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              {showStudents}
+            </Modal>
               <Button style={{background:"red",color:"white"}} onClick={()=>DeleteParent(onClick()["id"])}>Delete</Button>
             </Box>
           );
         },
       },
     ];
+    const columnsChild = [
+        { field: "id", headerName: "ID"},
+        {
+          field: "lastname",
+          headerName: "Last Name",
+          flex: 1,
+          cellClassName: "name-column--cell",
+        },
+        {
+          field: "firstname",
+          headerName: "First Name",
+          flex: 1,
+          cellClassName: "firstname-column--cell",
+        },
+        
+        {
+          field: "grade",
+          headerName: "Grade",
+          headerAlign: "left",
+          align: "left",
+        },
+        {
+            field: "age",
+            headerName: "Age",
+            type: "number",
+            headerAlign: "left",
+            align: "left",
+        }
+      ];
+    const showStudents=(
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+  <Box sx={{ backgroundColor: '#f5f5f5', padding: '20px',  textAlign: 'center',width: "45%",height: "49%", position: 'relative' }}>
+  <Box sx={{ textAlign: 'center', marginBottom: '-170px' }}>
+  <Box sx={{ position: 'absolute', top: '10px', right: '15px' }}>
+  <button onClick={handleCloseShow} style={{ backgroundColor: 'transparent', border: 'none', color: '#000', fontSize: '24px', cursor: 'pointer' }}>X</button>
+  </Box>
+        <Box
+          m="40px 0 0 0"
+          height="75vh"
+          
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+              color: "black",
+              height: "40vh",
+                width: "800px",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "1px solid black",
+              color: "black",
+              
+            },
+            "& .name-column--cell": {
+              color: "black",
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#003f5c",
+              borderBottom: "none",
+              color: "white",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+              backgroundColor: colors.primary[400],
+              color: "white",
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+              backgroundColor: "#003f5c",
+              color: "white",
+            },
+            "& .MuiCheckbox-root": {
+              color: `${"white"} !important`,
+            },
+          }}
+        >
+          <DataGrid disableSelectionOnClick onCellClick={(params, event) => event.stopPropagation()} rows={students} columns={columnsChild} components={{ Toolbar: GridToolbar }}/>
+        </Box>
+        </Box>
+        </Box>
+        </Box>
+    );
     return (
       <Box m="20px">
         <Header title="PARENTS" subtitle="Managing the parents" />
@@ -400,7 +503,7 @@ const Parent = () => {
         display="flex"
         justifyContent="end"
       >
-      <Button onClick={handleOpen} style={{background:"#003f5c",color:"white",fontWeight:"bold",padding:"10px 50px"}}>Add parent</Button>
+      <Button onClick={handleOpen} style={{background:"#003f5c",color:"white",fontWeight:"bold"}}>Add parent</Button>
       <Modal
         open={open}
         onClose={handleClose}

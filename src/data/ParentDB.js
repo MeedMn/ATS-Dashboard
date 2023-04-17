@@ -19,7 +19,12 @@ export async function getLongitudeLatitude(address) {
       });
     let data = datafetched.data
     return data
-  }
+}
+export async function getParentById(idP){
+  const parent = await axios.get(`http://localhost:8080/getById/${idP}`).catch((error)=>console.log(error));
+  let data = parent.data
+  return data
+}
 
 export async function getParents(){
     const datafetched =  await axios.get("http://localhost:8080/parents").catch((error) => console.log(error));
