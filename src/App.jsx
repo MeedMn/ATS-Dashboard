@@ -7,6 +7,7 @@ import Sidebar from "./components/Sidebar";
 import './app.css';
 import Driver from "./pages/Driver";
 import Bus from "./pages/Bus";
+import Parent from "./pages/Parent"
 import CoDriver from "./pages/CoDriver";
 
 
@@ -26,6 +27,7 @@ function App() {
               <Route path="/driver" element={<Driver />} />
               <Route path="/coDriver" element={<CoDriver />} />
               <Route path="/bus" element={<Bus />} />
+              <Route path="/parent" element={<Parent />} />
             </Routes>
           </main>
         </div>

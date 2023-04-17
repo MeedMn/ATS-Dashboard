@@ -12,6 +12,7 @@ import LocalParkingIcon from '@mui/icons-material/LocalParking';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import PeopleIcon from '@mui/icons-material/People';
 import logo from "../images/logo.png";
+import EscalatorWarningIcon from '@mui/icons-material/EscalatorWarning';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   return (
@@ -137,6 +138,14 @@ const Sidebar = () => {
             />
             <br/>
             <Item
+              title="Parents"
+              to="/parent"
+              icon={<EscalatorWarningIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <br/>
+            <Item
               title="Parking"
               to="/parking"
               icon={<LocalParkingIcon />}
@@ -144,13 +153,6 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <br/>
-            <Item
-              title="Clients"
-              to="/client"
-              icon={<PersonAddAlt1Icon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
             <br/>
           </Box>
         </Menu>
