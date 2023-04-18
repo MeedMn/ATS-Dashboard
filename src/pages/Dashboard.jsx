@@ -6,6 +6,9 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import Driver from "./Driver";
+import { useState } from "react";
+import { addDriver, getDrivers } from "../data/DriverDB";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -14,23 +17,41 @@ L.Icon.Default.mergeOptions({
   shadowUrl: iconShadow
 });
 const Dashboard = () => {
+  const [drivers,setDrivers] = useState([])
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const mapRef = useRef(null);
-  useEffect(() => {
+  
+  useEffect( () => {
     const map = L.map(mapRef.current).setView([31.6295, -7.9811], 11);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
       maxZoom: 19
     }).addTo(map);
-
+    
     const marker1 = L.marker([31.6564454,-8.0222897]).addTo(map);
     const marker2 = L.marker([40.7143, -74.0060]).addTo(map);
-
+    FetchDriver()
+    const driverMarker = drivers.map((driver) => (
+      L.marker([parseFloat(driver.latitude),parseFloat(driver.longitude)]).addTo(map)
+    ))
+    
     return () => {
       map.remove();
     };
   }, []);
+  async function FetchDriver(){
+      try {
+        const Drivers = await getDrivers();
+        setDrivers(Drivers)
+      } catch (error) {
+        console.error(error);
+      }
+   
+  }
+  
+  
+
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
