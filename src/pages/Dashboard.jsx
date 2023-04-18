@@ -2,7 +2,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import Header from "../components/Header";
 import React, { useRef, useEffect } from "react";
-import icon from 'leaflet/dist/images/marker-icon.png';
+import icon from 'leaflet/dist/images/driver.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
