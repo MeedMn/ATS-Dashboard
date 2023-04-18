@@ -23,32 +23,30 @@ const Dashboard = () => {
   const mapRef = useRef(null);
   
   useEffect( () => {
-    const map = L.map(mapRef.current).setView([31.6295, -7.9811], 11);
+    const map = L.map(mapRef.current).setView([31.6295, -7.9811], 12);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
       maxZoom: 19
     }).addTo(map);
-    
     const marker1 = L.marker([31.6564454,-8.0222897]).addTo(map);
-    const marker2 = L.marker([40.7143, -74.0060]).addTo(map);
-    FetchDriver()
-    const driverMarker = drivers.map((driver) => (
-      L.marker([parseFloat(driver.latitude),parseFloat(driver.longitude)]).addTo(map)
-    ))
-    
+    async function FetchDriver(){
+      try {
+        const Drivers = await getDrivers();
+        setDrivers(Drivers);
+        const driverMarkers = Drivers.map((driver) => (
+          L.marker([parseFloat(driver.latitude), parseFloat(driver.longitude)]).addTo(map)
+        ));
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  
+    FetchDriver();
+  
     return () => {
       map.remove();
     };
   }, []);
-  async function FetchDriver(){
-      try {
-        const Drivers = await getDrivers();
-        setDrivers(Drivers)
-      } catch (error) {
-        console.error(error);
-      }
-   
-  }
   
   
 
@@ -108,6 +106,37 @@ const Dashboard = () => {
               Working Drivers
             </Typography>
           </Box>
+          {drivers.map((driver, i) => (
+            <Box
+              key={`${driver.code}-${i}`}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              borderBottom={`4px solid ${colors.primary[500]}`}
+              p="15px"
+            >
+              <Box>
+                <Typography
+                  color="#003f5c"
+                  variant="h5"
+                  fontWeight="600"
+                >
+                  {driver.firstname + " "+ driver.lastname}
+                </Typography>
+                <Typography color="black">
+                  {driver.age}
+                </Typography>
+              </Box>
+              <Box color={colors.yellow[100]}>{driver.address}</Box>
+              <Box
+                backgroundColor="black"
+                p="5px 10px"
+                borderRadius="4px"
+              >
+                {driver.code}
+              </Box>
+            </Box>
+          ))}
         </Box>
       </Box>
     </Box>
