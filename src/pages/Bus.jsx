@@ -3,23 +3,21 @@ import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
-import {DeleteBus,addBus,editBus} from '../data/BusDB'
+import {DeleteBus,addBus,editBus,getBusses} from '../data/BusDB'
 import * as yup from 'yup';
 import { Formik } from "formik";
 
 const Bus = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
-    const handleFormSubmitBus = (values) => {
-        values.seat_number = parseInt(values.seat_number)
-        addBus(values,values.driver,values.codriver);
-        // window.location.assign("/bus");
+    const handleFormSubmit = (values) => {
+      values.seat_number = parseInt(values.seat_number)
+      addBus(values);
+      window.location.assign("/bus");
     };
     const initialValues = {
         registration_number: "",
         fuel: "",
-        seat_number: "",
-        driver: "",
-        codriver: "",
+        seat_number: ""
     };
     const [bus,setBus] = useState({
         registration_number: "",
@@ -31,9 +29,7 @@ const Bus = () => {
     const checkoutSchema = yup.object().shape({
         registration_number:yup.string().required("Required"),
         fuel:yup.string().required("Required"),
-        seat_number:yup.number().required("Required"),
-        driver:yup.string().required("Required"),
-        codriver:yup.string().required("Required"),
+        seat_number:yup.number().required("Required")
     })
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -64,7 +60,7 @@ const Bus = () => {
   </Box>
   <Header title="ADD BUS" subtitle="Add a new Bus !"/>
   </Box>
-          <Formik onSubmit={handleFormSubmitBus} initialValues={initialValues} validationSchema={checkoutSchema}>
+          <Formik onSubmit={handleFormSubmit} initialValues={initialValues} validationSchema={checkoutSchema}>
             {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
               <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
                 <Box
@@ -85,7 +81,7 @@ const Bus = () => {
                     value={values.registration_number}
                     name="registration_number"
                     error={!!touched.registration_number && !!errors.registration_number}
-                    helperText={touched.registration_number && errors.registration_number}
+                    helpertext={touched.registration_number && errors.registration_number}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -107,14 +103,14 @@ const Bus = () => {
                         <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={values.MenuItem}
+                                value={values.fuel}
                                 label="Fuel"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
                                 name="fuel"
                                 variant="outlined"
-                                error={touched.fuel && !!errors.fuel}
-                                helperText={touched.fuel && errors.fuel}
+                                error={!!touched.fuel && !!errors.fuel}
+                                helpertext={touched.fuel && errors.fuel}
                                 sx={{ 
                                     gridColumn: "span 2",
                                     "& label": { color: "black" },
@@ -140,54 +136,9 @@ const Bus = () => {
                     value={values.seat_number}
                     name="seat_number"
                     error={!!touched.seat_number && !!errors.seat_number}
-                    helperText={touched.seat_number && errors.seat_number}
+                    helpertext={touched.seat_number && errors.seat_number}
                     sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Driver"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.driver}
-                    name="driver"
-                    error={!!touched.driver && !!errors.driver}
-                    helperText={touched.driver && errors.driver}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Co-Driver"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.codriver}
-                    name="codriver"
-                    error={!!touched.codriver && !!errors.codriver}
-                    helperText={touched.codriver && errors.codriver}
-                    sx={{ 
-                        left :210,
-                        gridColumn: "span 2",
+                        gridColumn: "span 4",
                         "& label": { color: "black" },
                         "& .MuiInputBase-input": {
                             color: "black"
@@ -243,7 +194,7 @@ const Bus = () => {
                     value={values.registration_number}
                     name="registration_number"
                     error={!!touched.registration_number && !!errors.registration_number}
-                    helperText={touched.registration_number && errors.registration_number}
+                    helpertext={touched.registration_number && errors.registration_number}
                     sx={{ 
                         gridColumn: "span 2",
                         "& label": { color: "black" },
@@ -271,7 +222,7 @@ const Bus = () => {
                                 onChange={handleChange}
                                 variant="outlined"
                                 error={touched.fuel && !!errors.fuel}
-                                helperText={touched.fuel && errors.fuel}
+                                helpertext={touched.fuel && errors.fuel}
                                 sx={{ 
                                     gridColumn: "span 2",
                                     "& label": { color: "black" },
@@ -283,8 +234,8 @@ const Bus = () => {
                                     "&:hover fieldset": { borderColor: "green" },
                                   },}}
                             >
-                            <MenuItem value={10}>Diesel</MenuItem>
-                            <MenuItem value={20}>Essence</MenuItem>
+                            <MenuItem value="Diesel">Diesel</MenuItem>
+                            <MenuItem value="Essence">Essence</MenuItem>
                         </Select>
                     </FormControl>
                   <TextField
@@ -297,53 +248,8 @@ const Bus = () => {
                     value={values.seat_number}
                     name="seat_number"
                     error={!!touched.seat_number && !!errors.seat_number}
-                    helperText={touched.seat_number && errors.seat_number}
+                    helpertext={touched.seat_number && errors.seat_number}
                     sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Driver"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.driver}
-                    name="driver"
-                    error={!!touched.driver && !!errors.driver}
-                    helperText={touched.driver && errors.driver}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Co-Driver"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.codriver}
-                    name="codriver"
-                    error={!!touched.codriver && !!errors.codriver}
-                    helperText={touched.codriver && errors.codriver}
-                    sx={{ 
-                        left :210,
                         gridColumn: "span 2",
                         "& label": { color: "black" },
                         "& .MuiInputBase-input": {
@@ -369,9 +275,10 @@ const Bus = () => {
     const [busses,setBusses] = useState([]);
     // GetData
     useEffect(()=>{
-        getBusses()
+        getBus()
     },[]);
-    async function getBusses(){
+    async function getBus(){
+      setBusses(await getBusses())
     }
     
     const theme = useTheme();
@@ -399,13 +306,13 @@ const Bus = () => {
         align: "left",
       },
       {
-        field: "driver",
-        headerName: "Driver",
+        field: "id_driver_code",
+        headerName: "Driver Code",
         flex: 1.2,
       },
       {
-        field: "codriver",
-        headerName: "Co-Driver",
+        field: "id_CoDriver_code",
+        headerName: "Co-Driver Code",
         flex: 1.2,
       },
       {

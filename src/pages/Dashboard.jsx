@@ -68,28 +68,9 @@ const Dashboard = () => {
         >
                 <div ref={mapRef} style={{ height: "100%" }}></div>
         </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow="auto"
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            colors={colors.yellow[100]}
-            p="15px"
-          >
-            <Typography color={colors.yellow[100]} variant="h5" fontWeight="600">
-              Parents Reclamation
-            </Typography>
-          </Box>
-        </Box>
 
         <Box
-          gridColumn="span 8"
+          gridColumn="span 12"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
