@@ -42,13 +42,6 @@ const Bus = () => {
       code_driver: "",
       code_CoDriver: ""
     }
-    const [bus,setBus] = useState({
-        registration_number: "",
-        fuel: "",
-        seat_number: "",
-        driver: "",
-        codriver: "",
-  });
     const checkoutSchema = yup.object().shape({
         registration_number:yup.string().required("Required"),
         fuel:yup.string().required("Required"),

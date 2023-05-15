@@ -6,15 +6,14 @@ import icon from 'leaflet/dist/images/driver.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import Driver from "./Driver";
 import { useState } from "react";
-import { addDriver, getDrivers } from "../data/DriverDB";
+import { getDrivers } from "../data/DriverDB";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: icon,
   iconUrl: icon,
-  shadowUrl: iconShadow
+  shadowUrl: iconShadow,
 });
 const Dashboard = () => {
   const [drivers,setDrivers] = useState([])
@@ -28,7 +27,6 @@ const Dashboard = () => {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
       maxZoom: 19
     }).addTo(map);
-    const marker1 = L.marker([31.6564454,-8.0222897]).addTo(map);
     async function FetchDriver(){
       try {
         const Drivers = await getDrivers();
