@@ -445,16 +445,6 @@ const Driver = () => {
         flex: 1,
       },
       {
-        field: "latitude",
-        headerName: "Driver Position",
-        flex: 1,
-      },
-      {
-        field: "longitude",
-        headerName: "Driver Position",
-        flex: 1,
-      },
-      {
         field: "action",
         headerName: "Action",
         flex: 1,

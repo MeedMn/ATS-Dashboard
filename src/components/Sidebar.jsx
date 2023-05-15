@@ -144,14 +144,6 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <br/>
-            <Item
-              title="Parking"
-              to="/parking"
-              icon={<LocalParkingIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <br/>
             <br/>
           </Box>
         </Menu>
