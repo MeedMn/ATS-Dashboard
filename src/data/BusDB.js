@@ -25,13 +25,23 @@ export async function getBusses() {
       };
     });
       return data;
-  }
-
+}
+export async function affectDriverCoDriverToBus(idBus,idDriver,idCoDriver){
+    await axios.post(`http://localhost:8080/affectDrvierCoDriver/${idBus}/${idDriver}/${idCoDriver}`)
+}
+export async function getDriverIdByCode(code){
+    const datafetched = await axios
+      .get(`http://localhost:8080/driver/code/${code}`)
+      .catch((error) => console.log(error));
+    return datafetched.data
+}
+export async function getCoDriverIdByCode(code){
+    const datafetched = await axios
+      .get(`http://localhost:8080/coDriver/code/${code}`)
+      .catch((error) => console.log(error));
+    return datafetched.data
+}
 export async function DeleteBus(id){
     await axios.delete(`http://localhost:8080/deleteTransport/${id}`);
-    window.location.assign("/driver");
-}
-
-export const editBus = async (Bus) => {
-    await axios.put(`http://localhost:8080/updateTransport/${Bus['id']}`,Bus).catch((error) => console.log(error));
+    window.location.assign("/bus");
 }

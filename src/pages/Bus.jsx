@@ -3,22 +3,45 @@ import { useState,useEffect} from "react";
 import { DataGrid,GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
-import {DeleteBus,addBus,editBus,getBusses} from '../data/BusDB'
+import {DeleteBus,addBus,getBusses,getDriverIdByCode,getCoDriverIdByCode,affectDriverCoDriverToBus} from '../data/BusDB'
 import * as yup from 'yup';
 import { Formik } from "formik";
 
 const Bus = () => {
+  const [idP,setIdP] = useState(0)
   const isNonMobile = useMediaQuery("(min-width:600px)");
     const handleFormSubmit = (values) => {
       values.seat_number = parseInt(values.seat_number)
       addBus(values);
       window.location.assign("/bus");
     };
+    const handleFormSubmitDriverCo = (values) => {
+      const d = {
+        id_driver:null,
+        id_CoDriver:null
+      }
+      let promise1 = getDriverIdByCode(values.code_driver)
+      promise1.then((data)=>{
+        d.id_driver = data
+      })
+      let promise2 = getCoDriverIdByCode(values.code_CoDriver)
+      promise2.then((data)=>{
+        d.id_CoDriver = data
+      })
+      setTimeout(() => {
+        affectDriverCoDriverToBus(idP,d.id_driver,d.id_CoDriver)
+        window.location.assign("/bus");
+    }, 2000);
+  };
     const initialValues = {
         registration_number: "",
         fuel: "",
         seat_number: ""
     };
+    const initialValuesCodes = {
+      code_driver: "",
+      code_CoDriver: ""
+    }
     const [bus,setBus] = useState({
         registration_number: "",
         fuel: "",
@@ -31,6 +54,10 @@ const Bus = () => {
         fuel:yup.string().required("Required"),
         seat_number:yup.number().required("Required")
     })
+    const checkoutSchemaDrivers = yup.object().shape({
+      code_driver:yup.string().required("Required"),
+      code_CoDriver:yup.string().required("Required")
+  })
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
@@ -41,15 +68,15 @@ const Bus = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleOpenEdit = () => {
+  const handleOpenChild = () => {
     setOpenEdit(true);
   };
 
-  const handleCloseEdit = () => {
+  const handleCloseChild = () => {
     setOpenEdit(false);
   };
-  const EditModal = (data)=>{
-    setBus(data);
+  const ChildModal = (data)=>{
+    setIdP(data['id']);
   }
   const body = (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -160,118 +187,82 @@ const Bus = () => {
         </Box>
   </Box>
   );
-  const bodyedit = (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+  const bodychild = (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
     <Box sx={{ backgroundColor: '#f5f5f5', padding: '20px',  textAlign: 'center',width: "45%",height: "49%", position: 'relative' }}>
     <Box sx={{ textAlign: 'center', marginBottom: '-170px' }}>
     <Box sx={{ position: 'absolute', top: '10px', right: '15px' }}>
-    <button onClick={handleCloseEdit} style={{ backgroundColor: 'transparent', border: 'none', color: '#000', fontSize: '24px', cursor: 'pointer' }}>X</button>
+    <button onClick={handleCloseChild} style={{ backgroundColor: 'transparent', border: 'none', color: '#000', fontSize: '24px', cursor: 'pointer' }}>X</button>
     </Box>
-        <Header title="EDIT BUS" subtitle="Update the Bus you selected !"/>
+    <Header title="AFFECT DRIVER | CODRIVER" subtitle="Add new Driver | CoDriver to the bus"/>
     </Box>
-          <Formik onSubmit={(values, actions) => {
-            editBus(values);
-           actions.setSubmitting(false);
-           window.location.assign("/bus");
-           }} initialValues={bus} validationSchema={checkoutSchema}>
-            {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
-              <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
-                <Box
-                  display="grid"
-                  gap="30px"
-                  gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-                  sx={{
-                    "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-                  }}
-                >
-                                   <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Registration"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.registration_number}
-                    name="registration_number"
-                    error={!!touched.registration_number && !!errors.registration_number}
-                    helpertext={touched.registration_number && errors.registration_number}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                      <FormControl fullWidth sx={{ gridColumn: "span 2",  "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: "black"},
-                                    "&:hover fieldset": { borderColor: "green" },
-                                  }}}>
-                         <InputLabel id="demo-simple-select-label" sx={{ color: "black" }}>
-                             Fuel
-                          </InputLabel>
-                        <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={values.MenuItem}
-                                label="Fuel"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                variant="outlined"
-                                error={touched.fuel && !!errors.fuel}
-                                helpertext={touched.fuel && errors.fuel}
-                                sx={{ 
-                                    gridColumn: "span 2",
-                                    "& label": { color: "black" },
-                                    "& .MuiInputBase-input": {
-                                        color: "black"
-                                      },
-                                    "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { borderColor: "black"},
-                                    "&:hover fieldset": { borderColor: "green" },
-                                  },}}
-                            >
-                            <MenuItem value="Diesel">Diesel</MenuItem>
-                            <MenuItem value="Essence">Essence</MenuItem>
-                        </Select>
-                    </FormControl>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Number of Passengers"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.seat_number}
-                    name="seat_number"
-                    error={!!touched.seat_number && !!errors.seat_number}
-                    helpertext={touched.seat_number && errors.seat_number}
-                    sx={{ 
-                        gridColumn: "span 2",
-                        "& label": { color: "black" },
-                        "& .MuiInputBase-input": {
-                            color: "black"
-                          },
-                        "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "black"},
-                        "&:hover fieldset": { borderColor: "green" },
-                      },}}
-                  />
-                </Box>
-                <Box display="flex" justifyContent="center" mt="20px">
-                  <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#146C94"}}>
-                    Edit Driver
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
-        </Box>
-        </Box>
-  );
+            <Formik onSubmit={handleFormSubmitDriverCo} initialValues={initialValuesCodes} validationSchema={checkoutSchemaDrivers}>
+              {({ values, errors, touched, handleBlur, handleChange, handleSubmit,}) => (
+                <form onSubmit={handleSubmit} style={{marginTop:"250px"}}>
+                  <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+                    sx={{
+                      "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+                    }}
+                  >
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="text"
+                      label="Driver Code"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.code_driver}
+                      name="code_driver"
+                      error={!!touched.code_driver && !!errors.code_driver}
+                      helperText={touched.code_driver && errors.code_driver}
+                      sx={{ 
+                          gridColumn: "span 2",
+                          "& label": { color: "black" },
+                          "& .MuiInputBase-input": {
+                              color: "black"
+                            },
+                          "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "black"},
+                          "&:hover fieldset": { borderColor: "green" },
+                        },}}
+                    />
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="text"
+                      label="CoDriver Code"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.code_CoDriver}
+                      name="code_CoDriver"
+                      error={!!touched.code_CoDriver && !!errors.code_CoDriver}
+                      helperText={touched.code_CoDriver && errors.code_CoDriver}
+                      sx={{ 
+                          gridColumn: "span 2",
+                          "& label": { color: "black" },
+                          "& .MuiInputBase-input": {
+                              color: "black"
+                            },
+                          "& .MuiOutlinedInput-root": {
+                          "& fieldset": { borderColor: "black"},
+                          "&:hover fieldset": { borderColor: "green" },
+                        },}}
+                    />
+                  </Box>
+                  <Box display="flex" justifyContent="center" mt="20px">
+                    <Button type="submit" variant="contained" style={{color:"white",fontWeight:"bold",background:"#146C94"}}>
+                      Affect Them
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </Formik>
+          </Box>
+    </Box>
+    );
     const [busses,setBusses] = useState([]);
     // GetData
     useEffect(()=>{
@@ -337,14 +328,14 @@ const Bus = () => {
               justifyContent="space-between"
               borderRadius="4px"
             >
-              <Button style={{background:"green",color:"white",marginRight:"20px",padding:"10px 20px"}} onClick={()=>{EditModal(onClick());handleOpenEdit()}}>Edit</Button>
+              <Button style={{background:"#202020",color:"white",marginRight:"20px",padding:"10px 20px"}} onClick={()=>{ChildModal(onClick());handleOpenChild()}}>Add D/Co</Button>
               <Modal
               open={openEdit}
-              onClose={handleCloseEdit}
+              onClose={handleCloseChild}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              {bodyedit}
+              {bodychild}
             </Modal>
               <Button style={{background:"red",color:"white"}} onClick={()=>DeleteBus(onClick()["id"])}>Delete</Button>
             </Box>
